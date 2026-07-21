@@ -1,0 +1,86 @@
+<h2 class="sr-only">Kalkulator break-even agency affiliate marketing: hitung GMV, jumlah transaksi, dan jumlah affiliator yang dibutuhkan berdasarkan gaji, margin, harga produk, dan produktivitas affiliator</h2>
+
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:12px 24px; margin-bottom:1.5rem;">
+  <div>
+    <label style="font-size:13px; color:var(--text-secondary); display:block; margin-bottom:4px;">Gaji bulanan (Rp)</label>
+    <div style="display:flex; align-items:center; gap:10px;">
+      <input type="range" min="2000000" max="15000000" step="500000" value="4000000" id="gaji" style="flex:1;" />
+      <span id="gaji-out" style="font-size:14px; font-weight:500; min-width:70px; text-align:right;">4.0jt</span>
+    </div>
+  </div>
+  <div>
+    <label style="font-size:13px; color:var(--text-secondary); display:block; margin-bottom:4px;">Margin (%)</label>
+    <div style="display:flex; align-items:center; gap:10px;">
+      <input type="range" min="1" max="25" step="1" value="5" id="margin" style="flex:1;" />
+      <span id="margin-out" style="font-size:14px; font-weight:500; min-width:70px; text-align:right;">5%</span>
+    </div>
+  </div>
+  <div>
+    <label style="font-size:13px; color:var(--text-secondary); display:block; margin-bottom:4px;">Harga produk rata-rata (Rp)</label>
+    <div style="display:flex; align-items:center; gap:10px;">
+      <input type="range" min="50000" max="2000000" step="50000" value="650000" id="harga" style="flex:1;" />
+      <span id="harga-out" style="font-size:14px; font-weight:500; min-width:70px; text-align:right;">650rb</span>
+    </div>
+  </div>
+  <div>
+    <label style="font-size:13px; color:var(--text-secondary); display:block; margin-bottom:4px;">Sale per affiliator/bulan</label>
+    <div style="display:flex; align-items:center; gap:10px;">
+      <input type="range" min="1" max="10" step="1" value="3" id="sale" style="flex:1;" />
+      <span id="sale-out" style="font-size:14px; font-weight:500; min-width:70px; text-align:right;">3</span>
+    </div>
+  </div>
+</div>
+
+<div style="display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:12px;">
+  <div style="background:var(--surface-1); border-radius:var(--radius); padding:1rem;">
+    <p style="font-size:13px; color:var(--text-secondary); margin:0 0 4px;">GMV dibutuhkan/bulan</p>
+    <p style="font-size:22px; font-weight:500; margin:0;" id="gmv-out">Rp80jt</p>
+  </div>
+  <div style="background:var(--surface-1); border-radius:var(--radius); padding:1rem;">
+    <p style="font-size:13px; color:var(--text-secondary); margin:0 0 4px;">Transaksi dibutuhkan</p>
+    <p style="font-size:22px; font-weight:500; margin:0;" id="trx-out">123 sale</p>
+  </div>
+  <div style="background:var(--surface-1); border-radius:var(--radius); padding:1rem;">
+    <p style="font-size:13px; color:var(--text-secondary); margin:0 0 4px;">Affiliator aktif dibutuhkan</p>
+    <p style="font-size:22px; font-weight:500; margin:0;" id="aff-out">41 orang</p>
+  </div>
+</div>
+
+<script>
+function fmtJt(v){
+  if(v>=1000000000) return (v/1000000000).toFixed(2)+'M';
+  if(v>=1000000) return (v/1000000).toFixed(1)+'jt';
+  if(v>=1000) return Math.round(v/1000)+'rb';
+  return Math.round(v).toString();
+}
+function fmtRp(v){
+  return 'Rp'+new Intl.NumberFormat('id-ID').format(Math.round(v));
+}
+const gaji=document.getElementById('gaji');
+const margin=document.getElementById('margin');
+const harga=document.getElementById('harga');
+const sale=document.getElementById('sale');
+
+function update(){
+  const g=parseFloat(gaji.value);
+  const m=parseFloat(margin.value);
+  const h=parseFloat(harga.value);
+  const s=parseFloat(sale.value);
+
+  document.getElementById('gaji-out').textContent=fmtJt(g);
+  document.getElementById('margin-out').textContent=m+'%';
+  document.getElementById('harga-out').textContent=fmtJt(h);
+  document.getElementById('sale-out').textContent=s;
+
+  const gmv = g/(m/100);
+  const trx = gmv/h;
+  const aff = trx/s;
+
+  document.getElementById('gmv-out').textContent=fmtRp(gmv);
+  document.getElementById('trx-out').textContent=Math.ceil(trx)+' sale';
+  document.getElementById('aff-out').textContent=Math.ceil(aff)+' orang';
+}
+
+[gaji,margin,harga,sale].forEach(el=>el.addEventListener('input',update));
+update();
+</script>
